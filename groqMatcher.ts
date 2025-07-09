@@ -47,11 +47,10 @@ Guidelines:
       }
     );
 
-    console.log("Groq API response:", response.data);
     let content = response.data.choices[0].message.content.trim();
     const jsonMatch = content.match(/\{.*\}/s);
     if (jsonMatch) {
-      return jsonMatch[0]; // Return the matched JSON string
+      return jsonMatch[0];
     }
     throw new Error("No valid JSON in response");
   } catch (err: any) {

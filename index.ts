@@ -25,7 +25,6 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.post("/upload", upload.fields([{ name: "resume" }, { name: "jobDescription" }]), async (req: Request, res: Response): Promise<void> => {
-  console.log("Received upload request", req.files);
   const files = req.files as MulterFile;
 
   const resumePath = files?.resume?.[0]?.path;
@@ -45,18 +44,12 @@ app.post("/upload", upload.fields([{ name: "resume" }, { name: "jobDescription" 
   }
 
   try {
-    console.log("Extracting text from resume", resumePath);
     const resumeText = await extractText(resumePath, resumeOriginalName);
-    console.log("Extracting text from JD", jdPath);
     const jdText = await extractText(jdPath, jdOriginalName);
-    console.log("Extracted resume text (first 100 chars):", resumeText.substring(0, 100));
-    console.log("Extracted JD text (first 100 chars):", jdText.substring(0, 100));
     if (!resumeText || !jdText || resumeText.trim() === "" || jdText.trim() === "") {
       throw new Error("No text extracted from resume or job description");
     }
-    console.log("Matching resume to JD");
     const result = await matchResumeToJD(resumeText, jdText);
-    console.log("Match result (raw):", result);
     fs.unlinkSync(resumePath);
     fs.unlinkSync(jdPath);
     res.render("index", { result });

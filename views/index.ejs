@@ -5,14 +5,17 @@
     <title>JobFit Analyzer</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
   </head>
-  <body class="bg-light">
-    <header class="bg-primary text-white text-center py-4 mb-5">
-      <h1><span class="me-2">📊</span> JobFit Analyzer</h1>
-      <p class="lead">Optimize Your Hiring Process with Smart Resume Matching</p>
+  <body class="bg-dark text-white">
+    <header class="bg-gradient sticky-top py-3" style="background: linear-gradient(90deg, #1e3c72, #2a5298); z-index: 1000;">
+      <div class="container text-center">
+        <h1 class="display-5 fw-bold mb-0"><span class="me-2">📊</span> JobFit Analyzer</h1>
+        <p class="lead">Empowering Smart Hiring with AI Precision</p>
+      </div>
     </header>
-    <div class="container">
-      <div class="card shadow-lg border-0">
+    <div class="container py-5">
+      <div class="card shadow-lg border-0 bg-transparent">
         <div class="card-body">
           <form action="/upload" method="post" enctype="multipart/form-data" id="uploadForm" class="needs-validation" novalidate>
             <div class="mb-4">
@@ -22,7 +25,7 @@
                 <span class="file-info">Drag and drop or click to upload</span>
               </label>
               <div class="file-preview mt-2" id="filePreview">
-                <button type="button" class="btn btn-outline-primary btn-sm view-details" data-target="resume">View Details</button>
+                <button type="button" class="btn btn-outline-light btn-sm view-details" data-target="resume">View Details</button>
                 <div class="preview-content collapse" id="resumePreviewContent"></div>
               </div>
             </div>
@@ -33,62 +36,74 @@
                 <span class="file-info">Drag and drop or click to upload</span>
               </label>
               <div class="file-preview mt-2" id="jdPreview">
-                <button type="button" class="btn btn-outline-primary btn-sm view-details" data-target="jd">View Details</button>
+                <button type="button" class="btn btn-outline-light btn-sm view-details" data-target="jd">View Details</button>
                 <div class="preview-content collapse" id="jdPreviewContent"></div>
               </div>
             </div>
-            <button type="submit" class="btn btn-primary w-100 py-2 mb-4">Analyze Match</button>
+            <button type="submit" class="btn btn-neon w-100 py-2 mb-4">Analyze Match</button>
           </form>
 
           <% if (typeof result !== 'undefined') { %>
             <% let resultObj; %>
-            <% try { resultObj = JSON.parse(result); } catch (e) { resultObj = { score: 0, strengths: [], weaknesses: [], final_verdict: result, candidate_type: "Unknown", training_suggestions: { languages: [], reason: result } }; } %>
-            <div class="card result-card mt-5">
+            <% try { resultObj = JSON.parse(result); } catch (e) { resultObj = { score: 0, strengths: [], weaknesses: [], final_verdict: result, candidate_type: "Web Developer", training_suggestions: { languages: [], reason: result } }; } %>
+            <div class="card result-card mt-5 animate__animated animate__fadeIn">
               <div class="card-body">
-                <h4 class="card-title text-primary mb-4">Match Analysis</h4>
-                <div class="score-section mb-4">
-                  <h3 class="score-display text-center bg-success text-white p-3 rounded-pill">
-                    Score: <span class="display-4"><%= resultObj.score %></span>/10
-                  </h3>
-                  <p class="text-center mt-2">Candidate: <%= resultObj.candidate_type === "Unknown" ? "Unnamed Candidate" : resultObj.candidate_type %></p>
+                <h4 class="card-title text-neon mb-4">Match Analysis</h4>
+                <div class="score-section mb-4 text-center">
+                  <div class="gauge-container">
+                    <div class="gauge" style="background: linear-gradient(to right, #6ee7b7 <%= (resultObj.score || 0) * 10 %>%, #2d3748 <%= (resultObj.score || 0) * 10 %>%)">
+                      <span class="gauge-score"><%= resultObj.score %></span>/10
+                    </div>
+                  </div>
+                  <div class="progress mt-3">
+                    <div
+                      class="progress-bar progress-neon"
+                      role="progressbar"
+                      style="width: <%= (resultObj.score || 0) * 10 %>%"
+                      aria-valuenow="<%= (resultObj.score || 0) * 10 %>"
+                      aria-valuemin="0"
+                      aria-valuemax="100"
+                    ></div>
+                  </div>
+                  <p class="mt-2 profile-snapshot">
+                    <span class="badge bg-info-neon text-white">Profile Snapshot: <%= resultObj.candidate_type %></span>
+                  </p>
                 </div>
-                <div class="strengths-weaknesses mb-4 p-3 bg-light rounded">
-                  <h5 class="text-success mb-3">Strengths</h5>
+                <div class="strengths-weaknesses mb-4 p-3 bg-dark-neon rounded">
+                  <h5 class="text-success-neon mb-3"><span class="me-2">✅</span> Strengths</h5>
                   <ul class="list-group list-group-flush">
                     <% resultObj.strengths.forEach(strength => { %>
-                      <li class="list-group-item d-flex align-items-center">
-                        <span class="text-success me-2">✓</span> <%= strength %>
+                      <li class="list-group-item bg-transparent text-white d-flex align-items-center">
+                        <span class="me-2">✓</span> <%= strength %>
                       </li>
                     <% }); %>
                   </ul>
                 </div>
-                <div class="strengths-weaknesses mb-4 p-3 bg-light rounded">
-                  <h5 class="text-danger mb-3">Weaknesses</h5>
+                <div class="strengths-weaknesses mb-4 p-3 bg-dark-neon rounded">
+                  <h5 class="text-danger-neon mb-3"><span class="me-2">❌</span> Weaknesses</h5>
                   <ul class="list-group list-group-flush">
                     <% resultObj.weaknesses.forEach(weakness => { %>
-                      <li class="list-group-item d-flex align-items-center">
-                        <span class="text-danger me-2">✗</span> <%= weakness %>
+                      <li class="list-group-item bg-transparent text-white d-flex align-items-center">
+                        <span class="me-2">✗</span> <%= weakness %>
                       </li>
                     <% }); %>
                   </ul>
                 </div>
-                <div class="verdict-section mb-4 p-4 bg-warning text-white rounded">
-                  <h3 class="text-center">Final Verdict: <%= resultObj.final_verdict %></h3>
+                <div class="hiring-path mb-4 p-2 rounded-neon">
+                  <h5 class="text-center text-white">Path: <%= resultObj.final_verdict %></h5>
                 </div>
-                <% if (resultObj.candidate_type && resultObj.candidate_type !== "Unknown") { %>
-                  <div class="mb-4">
-                    <h5 class="text-info">Candidate Profile: <%= resultObj.candidate_type %></h5>
-                  </div>
-                <% } %>
+                <div class="mb-4">
+                  <h5 class="text-info-neon">Profile Snapshot: <%= resultObj.candidate_type %></h5>
+                </div>
                 <% if (resultObj.training_suggestions && resultObj.final_verdict === "Train & Hire") { %>
-                  <div class="mb-4 p-3 bg-light rounded">
-                    <h5 class="text-info">Training Recommendations</h5>
-                    <p><strong>Languages to Learn:</strong> <%= resultObj.training_suggestions.languages.join(", ") %></p>
-                    <p><strong>Reason:</strong> <%= resultObj.training_suggestions.reason %></p>
+                  <div class="skill-boost-plan mb-4 p-3 bg-dark-neon rounded">
+                    <h5 class="text-info-neon mb-3"><span class="me-2">🎓</span> Skill Boost Plan</h5>
+                    <p><strong>Languages to Master:</strong> <%= resultObj.training_suggestions.languages.join(", ") || "JavaScript, Node.js" %></p>
+                    <p><strong>Why:</strong> <%= resultObj.training_suggestions.reason || "To bridge skill gaps and align with job requirements" %></p>
                   </div>
                 <% } %>
-                <p class="text-muted">
-                  Note: The score reflects the candidate's alignment with the job description based on skills, experience, and education. The verdict is determined by the AI analysis.
+                <p class="text-muted-neon">
+                  Insight: The score reflects alignment with the job based on skills, experience, and education. The path is AI-optimized.
                 </p>
               </div>
             </div>

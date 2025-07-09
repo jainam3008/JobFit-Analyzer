@@ -1,37 +1,46 @@
-.result-card {
-  border-left: 5px solid #0d6efd;
-  background-color: #f8f9fa;
+body {
+  font-family: 'Orbitron', 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  color: #e2e8f0;
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
 }
 
-.score-progress {
-  height: 40px;
-  font-size: 1.2rem;
-  font-weight: bold;
-  border-radius: 20px;
-  background: linear-gradient(90deg, #0d6efd 0%, #4dabf7 100%);
-  color: #ffffff;
-  text-align: center;
-  transition: width 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+header.bg-gradient {
+  background: linear-gradient(90deg, #1e3c72, #2a5298);
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  height: 100px;
+  display: flex;
+  align-items: center;
 }
 
-.progress {
-  height: 40px;
-  border-radius: 20px;
-  background-color: #e9ecef;
-  overflow: hidden;
+.display-5 {
+  font-size: 2rem;
+  font-weight: 900;
+  margin: 0;
 }
 
-.strengths-weaknesses {
-  padding: 10px;
-  background-color: #ffffff;
-  border-radius: 5px;
+.lead {
+  font-size: 1rem;
+  color: #a3bffa;
+  margin: 0;
 }
 
-.verdict {
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: #28a745;
+.container {
+  padding-top: 120px;
+}
+
+.card {
+  border: none;
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+}
+
+.card-body {
+  padding: 2.5rem;
 }
 
 .custom-file-upload {
@@ -41,17 +50,18 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 150px;
-  border: 2px dashed #0d6efd;
-  border-radius: 10px;
-  background-color: #f1f5f9;
+  height: 180px;
+  border: 2px dashed #60a5fa;
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.1);
   cursor: pointer;
   transition: all 0.3s ease;
+  padding: 1.5rem;
 }
 
 .custom-file-upload:hover {
-  background-color: #e0e7ff;
-  border-color: #4dabf7;
+  background: rgba(96, 165, 250, 0.2);
+  border-color: #3b82f6;
 }
 
 .custom-file-upload input[type="file"] {
@@ -65,22 +75,23 @@
 }
 
 .custom-file-upload .file-label {
-  color: #0d6efd;
-  font-weight: bold;
-  margin-bottom: 5px;
+  color: #60a5fa;
+  font-weight: 600;
+  margin-bottom: 8px;
 }
 
 .custom-file-upload .file-info {
-  color: #6c757d;
-  font-size: 0.9rem;
+  color: #94a3b8;
+  font-size: 0.95rem;
 }
 
 .file-preview {
-  margin-top: 10px;
-  padding: 10px;
-  background-color: #e9ecef;
-  border-radius: 5px;
+  margin-top: 12px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
   display: none;
+  border: 1px solid #2d3748;
 }
 
 .file-preview.show {
@@ -90,59 +101,180 @@
 .preview-content {
   display: flex;
   align-items: center;
+  gap: 12px;
 }
 
 .preview-content a {
-  color: #0d6efd;
+  color: #60a5fa;
   text-decoration: none;
-  font-weight: bold;
+  font-weight: 500;
 }
 
 .preview-content a:hover {
-  color: #4dabf7;
+  color: #3b82f6;
   text-decoration: underline;
 }
 
 .remove-file {
-  color: #dc3545;
+  color: #f87171;
   cursor: pointer;
-  margin-left: 10px;
-  font-weight: bold;
-  font-size: 1.2rem;
+  font-weight: 600;
+  font-size: 1.3rem;
   line-height: 1;
 }
 
 .remove-file:hover {
-  color: #b02a37;
+  color: #ef4444;
 }
 
-.custom_match_resume {
-  background: linear-gradient(90deg, #0d6efd 0%, #4dabf7 100%);
-  color: #ffffff;
+.btn-neon {
+  background: linear-gradient(90deg, #6ee7b7, #34d399);
   border: none;
-  padding: 10px 20px;
+  padding: 12px;
   border-radius: 25px;
-  font-weight: bold;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 0 10px rgba(110, 231, 183, 0.7);
   transition: all 0.3s ease;
 }
 
-.custom_match_resume:hover {
-  background: linear-gradient(90deg, #0a4cc0 0%, #3d9bf5 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  color: #ffffff; /* Ensure text remains white on hover */
+.btn-neon:hover {
+  background: linear-gradient(90deg, #34d399, #10b981);
+  transform: translateY(-3px);
+  box-shadow: 0 0 20px rgba(52, 211, 153, 0.9);
 }
 
-/* ... (existing styles remain the same) ... */
+.result-card {
+  border-left: 8px solid #60a5fa;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 15px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+}
 
-.jd-preview {
-  margin-top: 10px;
+.score-section {
+  padding: 25px;
+  background: rgba(96, 165, 250, 0.1);
+  border-radius: 15px;
+  position: relative;
+}
+
+.gauge-container {
+  position: relative;
+  width: 200px;
+  height: 30px;
+  margin: 0 auto 15px;
+}
+
+.gauge {
+  height: 100%;
+  border-radius: 15px;
+  overflow: hidden;
+  position: relative;
+  background: #2d3748;
+}
+
+.gauge-score {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #6ee7b7;
+  z-index: 1;
+}
+
+.progress {
+  height: 20px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+
+.progress-neon {
+  background: linear-gradient(90deg, #6ee7b7, #34d399);
+  transition: width 1s ease;
+  border-radius: 10px;
+  box-shadow: 0 0 5px rgba(110, 231, 183, 0.7);
+}
+
+.profile-snapshot .badge {
+  padding: 10px 15px;
+  font-size: 1.1rem;
+  background: linear-gradient(90deg, #60a5fa, #3b82f6);
+  border: none;
+}
+
+.strengths-weaknesses {
+  border-left: 5px solid #6ee7b7;
+  border-right: 5px solid #f87171;
+}
+
+.text-success-neon {
+  color: #6ee7b7;
+}
+
+.text-danger-neon {
+  color: #f87171;
+}
+
+.text-info-neon {
+  color: #60a5fa;
+}
+
+.text-muted-neon {
+  color: #94a3b8;
+}
+
+.hiring-path {
+  background: linear-gradient(90deg, #60a5fa, #3b82f6);
+  border-radius: 15px;
   padding: 10px;
-  background-color: #e9ecef;
-  border-radius: 5px;
+}
+
+.hiring-path h5 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.skill-boost-plan {
+  border-left: 5px solid #60a5fa;
+}
+
+.rounded-neon {
+  border-radius: 15px;
+  box-shadow: 0 0 10px rgba(96, 165, 250, 0.3);
+}
+
+.bg-dark-neon {
+  background: rgba(45, 55, 72, 0.8);
+}
+
+.collapse {
   display: none;
 }
 
-.jd-preview.show {
+.collapse.show {
   display: block;
+}
+
+.view-details {
+  margin-bottom: 10px;
+}
+
+@media (max-width: 768px) {
+  .display-5 {
+    font-size: 1.5rem;
+  }
+  .lead {
+    font-size: 0.9rem;
+  }
+  .container {
+    padding-top: 100px;
+  }
+  .gauge-container {
+    width: 150px;
+  }
 }
