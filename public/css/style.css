@@ -145,6 +145,12 @@ header.bg-gradient {
   box-shadow: 0 0 20px rgba(52, 211, 153, 0.9);
 }
 
+.btn-neon:disabled {
+  background: #2d3748;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
 .result-card {
   border-left: 8px solid #60a5fa;
   background: rgba(255, 255, 255, 0.03);
@@ -157,55 +163,6 @@ header.bg-gradient {
   background: rgba(96, 165, 250, 0.1);
   border-radius: 15px;
   position: relative;
-}
-
-.gauge-container {
-  position: relative;
-  width: 200px;
-  height: 30px;
-  margin: 0 auto 15px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.gauge {
-  height: 100%;
-  width: 100%;
-  border-radius: 15px;
-  overflow: hidden;
-  position: relative;
-  background: #2d3748;
-}
-
-.gauge-score {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: #6ee7b7;
-  z-index: 1;
-  white-space: nowrap;
-}
-
-.progress {
-  height: 20px;
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.1);
-  overflow: hidden;
-}
-
-.progress-neon {
-  background: linear-gradient(90deg, #6ee7b7, #34d399);
-  transition: width 1s ease;
-  border-radius: 10px;
-  box-shadow: 0 0 5px rgba(110, 231, 183, 0.7);
-}
-
-.profile-snapshot {
-  margin-top: 10px;
 }
 
 .profile-snapshot .badge {
@@ -249,8 +206,17 @@ header.bg-gradient {
   margin: 0;
 }
 
-.skill-boost-plan {
-  border-left: 5px solid #60a5fa;
+.skill-boost-card {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(29, 78, 216, 0.1));
+  border-left: 6px solid #60a5fa;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(96, 165, 250, 0.2);
+  transition: all 0.3s ease-in-out;
+}
+
+.skill-boost-card:hover {
+  box-shadow: 0 6px 25px rgba(96, 165, 250, 0.4);
+  transform: translateY(-2px);
 }
 
 .rounded-neon {
@@ -274,6 +240,45 @@ header.bg-gradient {
   margin-bottom: 10px;
 }
 
+.jd-input-toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.form-check-input {
+  width: 2em;
+  height: 1em;
+  background-color: #2d3748;
+  border: none;
+  cursor: pointer;
+}
+
+.form-check-input:checked {
+  background-color: #6ee7b7;
+}
+
+.form-check-label {
+  color: #60a5fa;
+  font-weight: 500;
+}
+
+#jdTextArea {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid #2d3748;
+  color: #e2e8f0 !important;
+  resize: vertical;
+}
+
+#jdTextArea:focus {
+  border-color: #60a5fa;
+  box-shadow: 0 0 5px rgba(96, 165, 250, 0.5);
+}
+
+.spinner-border.text-neon {
+  color: #6ee7b7;
+}
+
 @media (max-width: 768px) {
   .display-5 {
     font-size: 1.5rem;
@@ -284,42 +289,12 @@ header.bg-gradient {
   .container {
     padding-top: 100px;
   }
-  .gauge-container {
-    width: 150px;
+  .card-body {
+    padding: 1.5rem;
   }
-}
-
-.modern-score-bar {
-  height: 30px;
-  max-width: 400px;
-  border-radius: 20px;
-  overflow: hidden;
-  background: rgba(255, 255, 255, 0.1);
-  position: relative;
-}
-
-.progress-bar.progress-neon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  font-size: 1.1rem;
-  color: #1e293b;
-  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.7);
-  background: linear-gradient(90deg, #6ee7b7, #34d399);
-  box-shadow: 0 0 10px rgba(110, 231, 183, 0.5);
-  transition: width 1s ease;
-}
-
-.score-label {
-  z-index: 1;
-  white-space: nowrap;
-}
-
-h2 {
-  font-size: 1.75rem;
-  font-weight: 800;
-  color: #60a5fa;
+  .custom-file-upload {
+    height: 150px;
+  }
 }
 
 .analysis-header {
@@ -340,19 +315,6 @@ h2 {
 .analysis-subtitle {
   font-size: 1rem;
   color: #e0f2fe;
-}
-
-.skill-boost-card {
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(29, 78, 216, 0.1));
-  border-left: 6px solid #60a5fa;
-  border-radius: 15px;
-  box-shadow: 0 4px 20px rgba(96, 165, 250, 0.2);
-  transition: all 0.3s ease-in-out;
-}
-
-.skill-boost-card:hover {
-  box-shadow: 0 6px 25px rgba(96, 165, 250, 0.4);
-  transform: translateY(-2px);
 }
 
 .skill-title {
@@ -413,4 +375,8 @@ h2 {
   fill: #6ee7b7;
   font-family: "Orbitron", sans-serif;
   text-shadow: 0 0 3px rgba(110, 231, 183, 0.6);
+}
+
+#jdTextArea::placeholder {
+  color: rgb(160, 156, 156);
 }

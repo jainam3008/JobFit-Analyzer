@@ -11,6 +11,7 @@ app.use(express.static(path.join(__dirname, "public")));
 const PORT = process.env.PORT || 3005;
 
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 app.engine("ejs", require("ejs").__express);
@@ -22,11 +23,12 @@ interface MulterFile {
 }
 
 app.get("/", (req: Request, res: Response) => {
-  res.render("index", { result: undefined });
+  res.render("index", { result: undefined, error: undefined });
 });
 
 app.post("/upload", upload.fields([{ name: "resume" }, { name: "jobDescription" }]), async (req: Request, res: Response): Promise<void> => {
   const files = req.files as MulterFile;
+  const { jdText } = req.body;
 
   const resumePath = files?.resume?.[0]?.path;
   const resumeOriginalName = files?.resume?.[0]?.originalname;
@@ -35,28 +37,47 @@ app.post("/upload", upload.fields([{ name: "resume" }, { name: "jobDescription" 
 
   if (!resumePath) {
     console.error("No resume file uploaded");
-    res.status(400).send("Resume file is required.");
+    res.status(400).render("index", { result: undefined, error: "Resume file is required." });
     return;
   }
-  if (!jdPath) {
-    console.error("No job description file uploaded");
-    res.status(400).send("Job description file is required.");
+
+  if (!jdPath && !jdText) {
+    console.error("No job description provided");
+    res.status(400).render("index", { result: undefined, error: "Job description file or text is required." });
+    return;
+  }
+
+  if (jdPath && jdText) {
+    console.error("Both job description file and text provided");
+    res.status(400).render("index", { result: undefined, error: "Please provide either a job description file or text, not both." });
     return;
   }
 
   try {
     const resumeText = await extractText(resumePath, resumeOriginalName);
-    const jdText = await extractText(jdPath, jdOriginalName);
-    if (!resumeText || !jdText || resumeText.trim() === "" || jdText.trim() === "") {
+    let jdTextFinal: string;
+
+    if (jdPath) {
+      jdTextFinal = await extractText(jdPath, jdOriginalName);
+    } else {
+      jdTextFinal = jdText.trim();
+    }
+
+    // Validate job description length and content
+    if (!resumeText || !jdTextFinal || resumeText.trim() === "" || jdTextFinal.trim() === "") {
       throw new Error("No text extracted from resume or job description");
     }
-    const result = await matchResumeToJD(resumeText, jdText);
-    fs.unlinkSync(resumePath);
-    fs.unlinkSync(jdPath);
-    res.render("index", { result });
+
+    const result = await matchResumeToJD(resumeText, jdTextFinal);
+    if (resumePath) fs.unlinkSync(resumePath);
+    if (jdPath) fs.unlinkSync(jdPath);
+    res.render("index", { result, error: undefined });
   } catch (err: any) {
     console.error("Error processing upload:", err.stack);
-    res.status(500).render("index", { result: JSON.stringify({ score: 0, strengths: [], weaknesses: [], final_verdict: "Error: " + err.message, candidate_type: "Unknown", training_suggestions: { languages: [], reason: "" } }) });
+    res.status(500).render("index", {
+      result: undefined,
+      error: err.message || "An error occurred while processing the files."
+    });
   }
 });
 

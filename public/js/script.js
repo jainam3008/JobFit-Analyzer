@@ -5,8 +5,38 @@ const jdPreview = document.getElementById("jdPreview");
 const uploadForm = document.getElementById("uploadForm");
 const resumePreviewContent = document.getElementById("resumePreviewContent");
 const jdPreviewContent = document.getElementById("jdPreviewContent");
+const jdModeToggle = document.getElementById("jdModeToggle");
+const jdFileInput = document.getElementById("jdFileInput");
+const jdTextInput = document.getElementById("jdTextInput");
+const jdTextArea = document.getElementById("jdTextArea");
+const analyzeBtn = document.getElementById("analyzeBtn");
+const loadingSpinner = document.getElementById("loadingSpinner");
 
-resumeInput.addEventListener("change", function () {
+function updateSubmitButton() {
+  const hasResume = resumeInput.files && resumeInput.files.length > 0;
+  const hasJdFile = jdInput.files && jdInput.files.length > 0;
+  const hasJdText = jdTextArea.value.trim().length > 0;
+  const isTextMode = jdModeToggle.checked;
+
+  analyzeBtn.disabled = !hasResume || (!hasJdFile && !hasJdText) || (isTextMode && !hasJdText) || (!isTextMode && !hasJdFile);
+}
+
+jdModeToggle.addEventListener("change", () => {
+  if (jdModeToggle.checked) {
+    jdFileInput.classList.add("d-none");
+    jdTextInput.classList.remove("d-none");
+    jdInput.value = "";
+    jdPreview.classList.remove("show");
+    jdPreviewContent.innerHTML = "";
+  } else {
+    jdFileInput.classList.remove("d-none");
+    jdTextInput.classList.add("d-none");
+    jdTextArea.value = "";
+  }
+  updateSubmitButton();
+});
+
+resumeInput.addEventListener("change", () => {
   if (resumeInput.files && resumeInput.files.length > 0) {
     const file = resumeInput.files[0];
     const fileType = file.type;
@@ -30,20 +60,22 @@ resumeInput.addEventListener("change", function () {
     const removeBtn = document.createElement("span");
     removeBtn.className = "remove-file";
     removeBtn.textContent = "×";
-    removeBtn.onclick = function () {
+    removeBtn.onclick = () => {
       resumeInput.value = "";
       filePreview.classList.remove("show");
       resumePreviewContent.classList.remove("show");
       resumePreviewContent.innerHTML = "";
+      updateSubmitButton();
     };
     previewDiv.appendChild(removeBtn);
 
     resumePreviewContent.appendChild(previewDiv);
     filePreview.classList.add("show");
   }
+  updateSubmitButton();
 });
 
-jdInput.addEventListener("change", function () {
+jdInput.addEventListener("change", () => {
   if (jdInput.files && jdInput.files.length > 0) {
     const file = jdInput.files[0];
     const fileType = file.type;
@@ -67,24 +99,42 @@ jdInput.addEventListener("change", function () {
     const removeBtn = document.createElement("span");
     removeBtn.className = "remove-file";
     removeBtn.textContent = "×";
-    removeBtn.onclick = function () {
+    removeBtn.onclick = () => {
       jdInput.value = "";
       jdPreview.classList.remove("show");
       jdPreviewContent.classList.remove("show");
       jdPreviewContent.innerHTML = "";
+      updateSubmitButton();
     };
     previewDiv.appendChild(removeBtn);
 
     jdPreviewContent.appendChild(previewDiv);
     jdPreview.classList.add("show");
   }
+  updateSubmitButton();
 });
 
-uploadForm.addEventListener("submit", function (event) {
-  if (!resumeInput.files || resumeInput.files.length === 0 || !jdInput.files || jdInput.files.length === 0) {
+jdTextArea.addEventListener("input", updateSubmitButton);
+
+uploadForm.addEventListener("submit", (event) => {
+  const hasResume = resumeInput.files && resumeInput.files.length > 0;
+  const hasJdFile = jdInput.files && jdInput.files.length > 0;
+  const hasJdText = jdTextArea.value.trim().length > 0;
+
+  if (!hasResume || (!hasJdFile && !hasJdText)) {
     event.preventDefault();
-    alert("Please select both a resume and a job description file to upload.");
+    alert("Please select a resume and provide a job description (file or text).");
+    return;
   }
+
+  if (hasJdFile && hasJdText) {
+    event.preventDefault();
+    alert("Please provide either a job description file or text, not both.");
+    return;
+  }
+
+  analyzeBtn.disabled = true;
+  loadingSpinner.classList.remove("d-none");
 });
 
 document.querySelectorAll(".view-details").forEach(button => {

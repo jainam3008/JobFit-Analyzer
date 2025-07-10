@@ -15,8 +15,25 @@
       </div>
     </header>
     <div class="container py-5">
-      <div class="card shadow-lg border-0 bg-transparent">
+      <div class="card shadow-lg border-0 bg0transparent">
         <div class="card-body">
+          <% 
+            let resultObj = { score: 0, strengths: [], weaknesses: [], final_verdict: "", candidate_type: "Unknown", training_suggestions: { languages: [], reason: "" } };
+            if (typeof result !== 'undefined' && result) {
+              try {
+                resultObj = JSON.parse(result);
+              } catch (e) {
+                resultObj.training_suggestions.reason = result;
+              }
+            }
+          %>
+          <% if (typeof error !== 'undefined' && error) { %>
+          <div class="alert alert-danger mt-4" role="alert"><%= error %></div>
+          <% } else if (resultObj.score === 0 && resultObj.final_verdict === "Reject" && resultObj.training_suggestions.reason) { %>
+          <div class="alert alert-danger mt-4" role="alert">
+            <strong>Error:</strong> <%= resultObj.training_suggestions.reason %>
+          </div>
+          <% } %>
           <form action="/upload" method="post" enctype="multipart/form-data" id="uploadForm" class="needs-validation" novalidate>
             <div class="mb-4">
               <label class="custom-file-upload">
@@ -30,22 +47,42 @@
               </div>
             </div>
             <div class="mb-4">
-              <label class="custom-file-upload">
-                <input type="file" name="jobDescription" id="jdInput" accept=".pdf,.docx" class="form-control" required />
-                <span class="file-label">Upload Job Description (.pdf or .docx)</span>
-                <span class="file-info">Drag and drop or click to upload</span>
-              </label>
-              <div class="file-preview mt-2" id="jdPreview">
-                <button type="button" class="btn btn-outline-light btn-sm view-details" data-target="jd">View Details</button>
-                <div class="preview-content collapse" id="jdPreviewContent"></div>
+              <div class="jd-input-toggle mb-3">
+                <label class="form-check form-switch">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    id="jdModeToggle"
+                    aria-label="Toggle between file upload and text input for job description"
+                  />
+                  <span class="form-check-label">Use Text Input for Job Description</span>
+                </label>
+              </div>
+              <div id="jdFileInput" class="jd-input-mode">
+                <label class="custom-file-upload">
+                  <input type="file" name="jobDescription" id="jdInput" accept=".pdf,.docx" class="form-control" />
+                  <span class="file-label">Upload Job Description (.pdf or .docx)</span>
+                  <span class="file-info">Drag and drop or click to upload</span>
+                </label>
+                <div class="file-preview mt-2" id="jdPreview">
+                  <button type="button" class="btn btn-outline-light btn-sm view-details" data-target="jd">View Details</button>
+                  <div class="preview-content collapse" id="jdPreviewContent"></div>
+                </div>
+              </div>
+              <div id="jdTextInput" class="jd-input-mode d-none">
+                <textarea
+                  name="jdText"
+                  id="jdTextArea"
+                  class="form-control"
+                  rows="6"
+                  placeholder="Paste or type a detailed job description (minimum 50 characters)...", style="color: azure;"
+                  required
+                ></textarea>
+                <div class="invalid-feedback">Job description must be at least 50 characters long.</div>
               </div>
             </div>
-            <button type="submit" class="btn btn-neon w-100 py-2 mb-4">Analyze Match</button>
+            <button type="submit" class="btn btn-neon w-100 py-2 mb-4" id="analyzeBtn" disabled>Analyze Match</button>
           </form>
-
-          <% let resultObj = { score: 0, strengths: [], weaknesses: [], final_verdict: "", candidate_type: "Web Developer", training_suggestions: {
-          languages: [], reason: "" } }; if (typeof result !== 'undefined') { try { resultObj = JSON.parse(result); } catch (e) {
-          resultObj.training_suggestions.reason = result; } } %>
 
           <div class="card result-card mt-5 animate__animated animate__fadeIn">
             <div class="card-body">
@@ -56,9 +93,7 @@
 
               <div class="score-section mb-4 text-center">
                 <h2 class="text-info-neon mb-2">Resume Match Score: <%= resultObj.score || 0 %>/10</h2>
-
                 <p class="text-muted-neon mb-2">How well the resume matches the job description</p>
-
                 <div class="score-circle-wrapper">
                   <svg class="score-circle" viewBox="0 0 100 100">
                     <defs>
@@ -105,7 +140,7 @@
               <div class="hiring-path mb-4 p-2 rounded-neon">
                 <h5 class="text-center text-white">Hiring Recommendation: <%= resultObj.final_verdict %></h5>
               </div>
-              <% if (resultObj.training_suggestions && resultObj.final_verdict === "Train & Hire") { %>
+              <% if (resultObj.training_suggestions && (resultObj.final_verdict === "Train & Hire" || resultObj.final_verdict === "Hire")) { %>
               <div class="skill-boost-card mb-4 p-4 rounded-neon">
                 <div class="d-flex align-items-center mb-3">
                   <span class="skill-icon me-3">🎓</span>
@@ -114,26 +149,25 @@
                 <div class="skill-content">
                   <p>
                     <strong class="text-info-neon">Languages to Master:</strong>
-                    <span class="text-white"><%= resultObj.training_suggestions.languages.join(", ") || "JavaScript, Node.js" %></span>
+                    <span class="text-white"><%= resultObj?.training_suggestions?.skills?.join(", ") || "None" %></span>
                   </p>
                   <p>
                     <strong class="text-info-neon">Why:</strong>
-                    <span class="text-muted-neon"
-                      ><%= resultObj.training_suggestions.reason || "To bridge skill gaps and align with job requirements" %></span
-                    >
+                    <span class="text-muted-neon"><%= resultObj?.training_suggestions?.reason || "No training required" %></span>
                   </p>
                 </div>
               </div>
-              <p class="text-muted-neon insight-text">
-                💡 Insight: The score reflects alignment with the job based on skills, experience, and education. The path is AI-optimized.
-              </p>
+              <% } %>
             </div>
           </div>
-          <% } %>
         </div>
       </div>
+      <p class="text-muted-neon insight-text mt-4">
+        💡 Insight: The score reflects alignment with the job based on skills, experience, and education. The path is AI-optimized for 2025
+        trends.
+      </p>
     </div>
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/js/script.js"></script>
   </body>
 </html>
