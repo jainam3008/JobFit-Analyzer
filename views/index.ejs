@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
   </head>
   <body class="bg-dark text-white">
-    <header class="bg-gradient sticky-top py-3" style="background: linear-gradient(90deg, #1e3c72, #2a5298); z-index: 1000;">
+    <header class="bg-gradient sticky-top py-3">
       <div class="container text-center">
         <h1 class="display-5 fw-bold mb-0"><span class="me-2">📊</span> JobFit Analyzer</h1>
         <p class="lead">Empowering Smart Hiring with AI Precision</p>
@@ -43,70 +43,98 @@
             <button type="submit" class="btn btn-neon w-100 py-2 mb-4">Analyze Match</button>
           </form>
 
-          <% if (typeof result !== 'undefined') { %>
-            <% let resultObj; %>
-            <% try { resultObj = JSON.parse(result); } catch (e) { resultObj = { score: 0, strengths: [], weaknesses: [], final_verdict: result, candidate_type: "Web Developer", training_suggestions: { languages: [], reason: result } }; } %>
-            <div class="card result-card mt-5 animate__animated animate__fadeIn">
-              <div class="card-body">
-                <h4 class="card-title text-neon mb-4">Match Analysis</h4>
-                <div class="score-section mb-4 text-center">
-                  <div class="gauge-container">
-                    <div class="gauge" style="background: linear-gradient(to right, #6ee7b7 <%= (resultObj.score || 0) * 10 %>%, #2d3748 <%= (resultObj.score || 0) * 10 %>%)">
-                      <span class="gauge-score"><%= resultObj.score %></span>/10
-                    </div>
+          <%
+          let resultObj = {
+            score: 0,
+            strengths: [],
+            weaknesses: [],
+            final_verdict: "",
+            candidate_type: "Web Developer",
+            training_suggestions: { languages: [], reason: "" }
+          };
+        
+          if (typeof result !== 'undefined') {
+            try {
+              resultObj = JSON.parse(result);
+            } catch (e) {
+              resultObj.training_suggestions.reason = result;
+            }
+          }
+        %>
+        
+          <div class="card result-card mt-5 animate__animated animate__fadeIn">
+            <div class="card-body">
+              <div class="analysis-header mb-4">
+                <h1 class="analysis-title">Resume Matching Insights</h1>
+                <p class="analysis-subtitle">An AI-powered evaluation of how well the resume aligns with the job description</p>
+              </div>
+
+              <div class="score-section mb-4 text-center">
+                <h2 class="text-info-neon mb-2">Resume Match Score: <%= resultObj.score || 0 %>/10</h2>
+
+                <p class="text-muted-neon mb-2">How well the resume matches the job description</p>
+
+                <div class="progress modern-score-bar mx-auto">
+                  <div
+                    class="progress-bar progress-neon"
+                    role="progressbar"
+                    style="width: <%= (resultObj.score || 0) * 10 %>%"
+                    aria-valuenow="<%= (resultObj.score || 0) * 10 %>"
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                  >
+                    <span class="score-label"><%= resultObj.score %>/10</span>
                   </div>
-                  <div class="progress mt-3">
-                    <div
-                      class="progress-bar progress-neon"
-                      role="progressbar"
-                      style="width: <%= (resultObj.score || 0) * 10 %>%"
-                      aria-valuenow="<%= (resultObj.score || 0) * 10 %>"
-                      aria-valuemin="0"
-                      aria-valuemax="100"
-                    ></div>
-                  </div>
-                  <p class="mt-2 profile-snapshot">
-                    <span class="badge bg-info-neon text-white">Profile Snapshot: <%= resultObj.candidate_type %></span>
-                  </p>
                 </div>
-                <div class="strengths-weaknesses mb-4 p-3 bg-dark-neon rounded">
-                  <h5 class="text-success-neon mb-3"><span class="me-2">✅</span> Strengths</h5>
-                  <ul class="list-group list-group-flush">
-                    <% resultObj.strengths.forEach(strength => { %>
-                      <li class="list-group-item bg-transparent text-white d-flex align-items-center">
-                        <span class="me-2">✓</span> <%= strength %>
-                      </li>
-                    <% }); %>
-                  </ul>
-                </div>
-                <div class="strengths-weaknesses mb-4 p-3 bg-dark-neon rounded">
-                  <h5 class="text-danger-neon mb-3"><span class="me-2">❌</span> Weaknesses</h5>
-                  <ul class="list-group list-group-flush">
-                    <% resultObj.weaknesses.forEach(weakness => { %>
-                      <li class="list-group-item bg-transparent text-white d-flex align-items-center">
-                        <span class="me-2">✗</span> <%= weakness %>
-                      </li>
-                    <% }); %>
-                  </ul>
-                </div>
-                <div class="hiring-path mb-4 p-2 rounded-neon">
-                  <h5 class="text-center text-white">Path: <%= resultObj.final_verdict %></h5>
-                </div>
-                <div class="mb-4">
-                  <h5 class="text-info-neon">Profile Snapshot: <%= resultObj.candidate_type %></h5>
-                </div>
-                <% if (resultObj.training_suggestions && resultObj.final_verdict === "Train & Hire") { %>
-                  <div class="skill-boost-plan mb-4 p-3 bg-dark-neon rounded">
-                    <h5 class="text-info-neon mb-3"><span class="me-2">🎓</span> Skill Boost Plan</h5>
-                    <p><strong>Languages to Master:</strong> <%= resultObj.training_suggestions.languages.join(", ") || "JavaScript, Node.js" %></p>
-                    <p><strong>Why:</strong> <%= resultObj.training_suggestions.reason || "To bridge skill gaps and align with job requirements" %></p>
-                  </div>
-                <% } %>
-                <p class="text-muted-neon">
-                  Insight: The score reflects alignment with the job based on skills, experience, and education. The path is AI-optimized.
+
+                <p class="mt-3 profile-snapshot">
+                  <span class="badge bg-info-neon text-white"> Profile Snapshot: <%= resultObj.candidate_type %> </span>
                 </p>
               </div>
+
+              <div class="strengths-weaknesses mb-4 p-3 bg-dark-neon rounded">
+                <h5 class="text-success-neon mb-3"><span class="me-2">✅</span> Strengths</h5>
+                <ul class="list-group list-group-flush">
+                  <% resultObj.strengths.forEach(strength => { %>
+                  <li class="list-group-item bg-transparent text-white d-flex align-items-center"><span class="me-2">✓</span> <%= strength %></li>
+                  <% }); %>
+                </ul>
+              </div>
+              <div class="strengths-weaknesses mb-4 p-3 bg-dark-neon rounded">
+                <h5 class="text-danger-neon mb-3"><span class="me-2">❌</span> Weaknesses</h5>
+                <ul class="list-group list-group-flush">
+                  <% resultObj.weaknesses.forEach(weakness => { %>
+                  <li class="list-group-item bg-transparent text-white d-flex align-items-center"><span class="me-2">✗</span> <%= weakness %></li>
+                  <% }); %>
+                </ul>
+              </div>
+              <div class="hiring-path mb-4 p-2 rounded-neon">
+                <h5 class="text-center text-white">Hiring Recommendation: <%= resultObj.final_verdict %></h5>
+              </div>
+              <% if (resultObj.training_suggestions && resultObj.final_verdict === "Train & Hire") { %>
+              <div class="skill-boost-card mb-4 p-4 rounded-neon">
+                <div class="d-flex align-items-center mb-3">
+                  <span class="skill-icon me-3">🎓</span>
+                  <h4 class="skill-title m-0">Skill Boost Plan</h4>
+                </div>
+                <div class="skill-content">
+                  <p>
+                    <strong class="text-info-neon">Languages to Master:</strong>
+                    <span class="text-white"><%= resultObj.training_suggestions.languages.join(", ") || "JavaScript, Node.js" %></span>
+                  </p>
+                  <p>
+                    <strong class="text-info-neon">Why:</strong>
+                    <span class="text-muted-neon"
+                      ><%= resultObj.training_suggestions.reason || "To bridge skill gaps and align with job requirements" %></span
+                    >
+                  </p>
+                </div>
+              </div>
+              <p class="text-muted-neon insight-text">
+                💡 Insight: The score reflects alignment with the job based on skills, experience, and education. The path is AI-optimized.
+              </p>
             </div>
+          </div>
           <% } %>
         </div>
       </div>

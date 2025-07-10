@@ -13,6 +13,7 @@ const PORT = process.env.PORT || 3005;
 app.use(express.urlencoded({ extended: true }));
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
+app.engine("ejs", require("ejs").__express);
 
 const upload = multer({ dest: "uploads/" });
 

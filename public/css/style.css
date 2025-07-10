@@ -1,5 +1,5 @@
 body {
-  font-family: 'Orbitron', 'Segoe UI', sans-serif;
+  font-family: "Orbitron", "Segoe UI", sans-serif;
   background: linear-gradient(135deg, #0f172a, #1e293b);
   color: #e2e8f0;
   overflow-x: hidden;
@@ -9,11 +9,15 @@ body {
 
 header.bg-gradient {
   background: linear-gradient(90deg, #1e3c72, #2a5298);
-  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 2px 15px rgba(101, 119, 187, 0.5);
   z-index: 1000;
   height: 100px;
   display: flex;
   align-items: center;
+  position: sticky;
+  top: 0;
+  background-color: #1e3c72;
+  background-blend-mode: multiply;
 }
 
 .display-5 {
@@ -26,10 +30,6 @@ header.bg-gradient {
   font-size: 1rem;
   color: #a3bffa;
   margin: 0;
-}
-
-.container {
-  padding-top: 120px;
 }
 
 .card {
@@ -164,10 +164,14 @@ header.bg-gradient {
   width: 200px;
   height: 30px;
   margin: 0 auto 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .gauge {
   height: 100%;
+  width: 100%;
   border-radius: 15px;
   overflow: hidden;
   position: relative;
@@ -183,6 +187,7 @@ header.bg-gradient {
   font-weight: 700;
   color: #6ee7b7;
   z-index: 1;
+  white-space: nowrap;
 }
 
 .progress {
@@ -199,11 +204,16 @@ header.bg-gradient {
   box-shadow: 0 0 5px rgba(110, 231, 183, 0.7);
 }
 
+.profile-snapshot {
+  margin-top: 10px;
+}
+
 .profile-snapshot .badge {
   padding: 10px 15px;
   font-size: 1.1rem;
   background: linear-gradient(90deg, #60a5fa, #3b82f6);
   border: none;
+  display: inline-block;
 }
 
 .strengths-weaknesses {
@@ -277,4 +287,123 @@ header.bg-gradient {
   .gauge-container {
     width: 150px;
   }
+}
+
+.modern-score-bar {
+  height: 30px;
+  max-width: 400px;
+  border-radius: 20px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.1);
+  position: relative;
+}
+
+.progress-bar.progress-neon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: #1e293b;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.7);
+  background: linear-gradient(90deg, #6ee7b7, #34d399);
+  box-shadow: 0 0 10px rgba(110, 231, 183, 0.5);
+  transition: width 1s ease;
+}
+
+.score-label {
+  z-index: 1;
+  white-space: nowrap;
+}
+
+h2 {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #60a5fa;
+}
+
+.text-muted-neon {
+  color: #94a3b8;
+}
+
+.modern-score-bar {
+  height: 30px;
+  max-width: 400px;
+  border-radius: 20px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.1);
+  position: relative;
+}
+
+.progress-bar.progress-neon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: #1e293b;
+  background: linear-gradient(90deg, #6ee7b7, #34d399);
+  box-shadow: 0 0 10px rgba(110, 231, 183, 0.5);
+  transition: width 1s ease;
+}
+
+.score-label {
+  z-index: 1;
+  white-space: nowrap;
+}
+
+.analysis-header {
+  text-align: center;
+  margin-bottom: 30px;
+  padding: 30px 15px 10px;
+  background: linear-gradient(90deg, #1e3a8a, #2563eb);
+  border-radius: 20px;
+  box-shadow: 0 0 20px rgba(96, 165, 250, 0.3);
+}
+
+.analysis-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: white;
+}
+
+.analysis-subtitle {
+  font-size: 1rem;
+  color: #e0f2fe;
+}
+
+.skill-boost-card {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(29, 78, 216, 0.1));
+  border-left: 6px solid #60a5fa;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(96, 165, 250, 0.2);
+  transition: all 0.3s ease-in-out;
+}
+
+.skill-boost-card:hover {
+  box-shadow: 0 6px 25px rgba(96, 165, 250, 0.4);
+  transform: translateY(-2px);
+}
+
+.skill-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #60a5fa;
+}
+
+.skill-icon {
+  font-size: 1.6rem;
+}
+
+.skill-content p {
+  margin: 0.5rem 0;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.insight-text {
+  font-style: italic;
+  font-size: 0.95rem;
+  padding-left: 8px;
+  border-left: 3px solid #3b82f6;
 }
